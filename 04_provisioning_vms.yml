@@ -92,16 +92,26 @@
         state: absent
       loop: "{{ query('inventory_hostnames', 'all:!vm_host') }}"
 
+    - name: Wait 600 seconds for target connection to become reachable/usable
+      wait_for:
+        port: 22
+        host: "{{ item }}"
+        search_regex: OpenSSH
+        timeout: 600
+        delay: 0
+      with_inventory_hostnames:
+        masters,workers
+
 - name: Check connection and set facts
   hosts: masters,workers
   gather_facts: no
+  vars_files:
+    - vars/k8s_cluster.yml
   tasks:
-    - name: Wait 600 seconds for target connection to become reachable/usable
-      wait_for_connection:
-        timeout: 600
-        delay: 0
-
-    - ping:
+    - name: Install the latest version of Python 
+      raw: dnf install -y python39
+      become: true
+      when: k8s.cluster_os == 'CentOS'
 
     - name: Add hosts to correct groups
       group_by:

@@ -164,6 +164,7 @@
               file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list
             - repo: "{{ crio.ubuntu.crio_repo }}"
               file: /etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:1.19.list
+          when: k8s.cluster_os == 'Ubuntu'
 
         - name: Temporary fix for memory swap slices on 20.04
           lineinfile: 
