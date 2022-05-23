@@ -1,9 +1,9 @@
 # General configuration
 k8s:
   cluster_name: k8s-test
-  cluster_os: Ubuntu
+  cluster_os: CentOS 
   cluster_version: "1.23"
-  container_runtime: docker
+  container_runtime: crio 
   master_schedulable: false
 
 # Nodes configuration
@@ -28,9 +28,11 @@ k8s:
     additional_san: ""
     pod_cidr: 10.20.0.0/16
     service_cidr: 10.110.0.0/16
+      #    pod_cidr6: 2a02:a03f:a01f:f110::/64
+      #    service_cidr6: 2a02:a03f:a01f:f110:1::/112
 
 # Choose between [calico/flannel/cilium]
-    cni_plugin: cilium
+    cni_plugin: flannel
 
   storage:
     nfs_enabled: false
