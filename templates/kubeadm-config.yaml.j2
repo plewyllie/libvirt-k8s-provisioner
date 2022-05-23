@@ -6,9 +6,15 @@ bootstrapTokens:
 ---
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1beta2
+{% if network.pod_cidr6 is defined and k8s.network.service_cidr6 is defined %}
+networking:
+  serviceSubnet: "{{ k8s.network.service_cidr }},{{ k8s.network.service_cidr6 }}"
+  podSubnet: "{{ ('10.244.0.0/16' if (k8s.network.cni_plugin == 'flannel') else k8s.network.pod_cidr) }},{{ k8s.network.pod_cidr6 }}"
+{% else %}
 networking:
   serviceSubnet: "{{ k8s.network.service_cidr }}"
   podSubnet: "{{ ('10.244.0.0/16' if (k8s.network.cni_plugin == 'flannel') else k8s.network.pod_cidr) }}"
+{% endif %}
 {% if k8s.network.additional_san is defined and k8s.network.additional_san != '' %}
 apiServer:
   certSANs:
